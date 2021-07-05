@@ -13,10 +13,20 @@ namespace Inventory_1
     public partial class Form1 : Form
     {
         public static string[,] array = new string[5, 5];
+        public List<PictureBox> pictures = new List<PictureBox>();
+        public int compAgregados = 0;
+        public int cantAgregados;
+        public int cordX = 10;
+        public int cordY = 10;
 
         public Form1()
         {
             inicializarArray();
+
+            agregarSlots(25);
+
+            dibujarSlots();
+
             InitializeComponent();
         }
 
@@ -101,51 +111,77 @@ namespace Inventory_1
             ruta = "C:/Users/psalvi/source/repos/Inventory_1/Inventory_1/images/Espada.jpg";
             Bitmap imageEspada = new Bitmap(ruta);
 
+            int numSlot = 0;
+
             for (int i = 0; i < 5; i++)
             {
                 for (int j = 0; j < 5; j++)
                 {
                     if (!array[i, j].Equals("-"))
                     {
-                        if (array[i, j].Equals("Armadura de oro+9")) agregarObjetoInventario(i, j, imageArmadura);
-                        if (array[i, j].Equals("Escudo de batalla+9")) agregarObjetoInventario(i, j, imageEscudo);
-                        if (array[i, j].Equals("Espada envenenada+9")) agregarObjetoInventario(i, j, imageEspada);
+                        if (array[i, j].Equals("Armadura de oro+9")) agregarObjetoInventario(imageArmadura, numSlot);
+                        if (array[i, j].Equals("Escudo de batalla+9")) agregarObjetoInventario(imageEscudo, numSlot);
+                        if (array[i, j].Equals("Espada envenenada+9")) agregarObjetoInventario(imageEspada, numSlot);
                     }
+                    numSlot++;
                 }
             }
         }
 
-        public void agregarObjetoInventario(int x, int y, Bitmap image)
+        public void agregarObjetoInventario(Bitmap image, int numSlot)
         {
-            if (x == 0 && y == 0) image_0_0.Image = (Image)image;
-            if (x == 0 && y == 1) image_0_1.Image = (Image)image;
-            if (x == 0 && y == 2) image_0_2.Image = (Image)image;
-            if (x == 0 && y == 3) image_0_3.Image = (Image)image;
-            if (x == 0 && y == 4) image_0_4.Image = (Image)image;
+            pictures[numSlot].Image = (Image)image;
+        }
 
-            if (x == 1 && y == 0) image_1_0.Image = (Image)image;
-            if (x == 1 && y == 1) image_1_1.Image = (Image)image;
-            if (x == 1 && y == 2) image_1_2.Image = (Image)image;
-            if (x == 1 && y == 3) image_1_3.Image = (Image)image;
-            if (x == 1 && y == 4) image_1_4.Image = (Image)image;
+        private void agregarSlots(int cantidad)
+        {
+            for (int i = 0; i < cantidad; i++)
+            {
+                PictureBox newPicture = new PictureBox();
+                compAgregados++;
+                Personalizar(newPicture);
+                pictures.Add(newPicture);
+            }
+        }
 
-            if (x == 2 && y == 0) image_2_0.Image = (Image)image;
-            if (x == 2 && y == 1) image_2_1.Image = (Image)image;
-            if (x == 2 && y == 2) image_2_2.Image = (Image)image;
-            if (x == 2 && y == 3) image_2_3.Image = (Image)image;
-            if (x == 2 && y == 4) image_2_4.Image = (Image)image;
+        private void Personalizar(PictureBox pic)
+        {
+            Size medidas = new Size(100, 100);
+            pic.Size = medidas;
 
-            if (x == 3 && y == 0) image_3_0.Image = (Image)image;
-            if (x == 3 && y == 1) image_3_1.Image = (Image)image;
-            if (x == 3 && y == 2) image_3_2.Image = (Image)image;
-            if (x == 3 && y == 3) image_3_3.Image = (Image)image;
-            if (x == 3 && y == 4) image_3_4.Image = (Image)image;
+            cantAgregados++;
 
-            if (x == 4 && y == 0) image_4_0.Image = (Image)image;
-            if (x == 4 && y == 1) image_4_1.Image = (Image)image;
-            if (x == 4 && y == 2) image_4_2.Image = (Image)image;
-            if (x == 4 && y == 3) image_4_3.Image = (Image)image;
-            if (x == 4 && y == 4) image_4_4.Image = (Image)image;
+            Point punto;
+
+            if (compAgregados > 1)
+            {
+                if (cantAgregados == 6)
+                {
+                    cordY += 110;
+                    cordX = 10;
+                    compAgregados = 1;
+                    cantAgregados = 1;
+                }
+                else cordX += 110;
+
+                punto = new Point(cordX, cordY);
+            }
+            else
+            {
+                punto = new Point(cordX, cordY);
+            }
+
+            pic.Location = punto;
+
+            pic.BorderStyle = BorderStyle.FixedSingle;
+        }
+
+        private void dibujarSlots()
+        {
+            foreach (PictureBox item in pictures)
+            {
+                this.Controls.Add(item);
+            }
         }
     }
 }
